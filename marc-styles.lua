@@ -63,7 +63,7 @@ data:extend(
 	{
 		type = "sprite",
 		name = "sprite_marc_calculator",
-		filename = "__MaxRateCalculator__/graphics/calculator.png",
+		filename = "__max-rate-calculator-updated__/graphics/calculator.png",
 		width = 64,
 		height = 64
 	}
