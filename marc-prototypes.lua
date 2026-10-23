@@ -16,7 +16,7 @@ data:extend(
     type = "selection-tool",
     name = "max-rate-calculator",
     icons = {
-      { icon = "__max-rate-calculator-updated__/graphics/max-rate-calculator32.png", icon_size = 32 },
+      { icon = "__max-rate-calculator-updated__/graphics/calculator-tool-light.png", icon_size = 64 },
     },
     select = {
           border_color = { r = 1, g = 1 },
@@ -51,10 +51,10 @@ data:extend(
     type = "shortcut",
     name = "max-rate-shortcut",
     order = "d[tools]-r[max-rate-calculator]",
-    icon = "__max-rate-calculator-updated__/graphics/max-rate-calculator32.png",
-    small_icon = "__max-rate-calculator-updated__/graphics/max-rate-calculator24.png",
-    icon_size = 32,
-    small_icon_size = 24,
+    icon = "__max-rate-calculator-updated__/graphics/calculator-tool.png",
+    small_icon = "__max-rate-calculator-updated__/graphics/calculator-tool.png",
+    icon_size = 64,
+    small_icon_size = 64,
     action = "lua",
     associated_control_input = "max-rate-shortcut",
    }

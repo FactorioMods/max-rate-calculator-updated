@@ -1,4 +1,10 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.0.4
+Date: 2026-10-24
+  Graphics:
+    - Use a clear calculator icon for the shortcut and selection tool instead of the upstream question-mark placeholders.
+
+---------------------------------------------------------------------------------------------------
 Version: 1.0.3
 Date: 2026-10-23
   Compatibility:

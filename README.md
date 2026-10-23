@@ -2,7 +2,7 @@
 
 Select machines to calculate their maximum ingredient consumption and product output.
 
-**Factorio 2.1 · Version 1.0.3**
+**Factorio 2.1 · Version 1.0.4**
 
 
 ## Installation

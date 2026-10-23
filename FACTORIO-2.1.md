@@ -1,6 +1,6 @@
 # Factorio 2.1 notes
 
-Tested with **Factorio 2.1.23**. Current fork version: **1.0.3**.
+Tested with **Factorio 2.1.23**. Current fork version: **1.0.4**.
 
 ## Changes
 
@@ -15,3 +15,9 @@ Tested with **Factorio 2.1.23**. Current fork version: **1.0.3**.
 The fixture called the production selection handler directly; it did not automate the selection gesture or every recipe type.
 
 Tests used private copies of saves and local host/client sessions. Raw player data and test hooks are not shipped.
+
+## Graphics update
+
+Version 1.0.4 replaces inherited question-mark placeholders with calculator icons: a dark shortcut glyph and a light selection-tool icon for dark GUI panels.
+
+Validated with Factorio 2.1.23 icon export and two consistent 600-tick runs of a private New_clean_2 copy with all fourteen maintained mods enabled. These graphics checks do not repeat the earlier multiplayer feature tests.
