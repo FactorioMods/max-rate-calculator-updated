@@ -505,9 +505,9 @@ local function write_marc_gui(player, inout_data)
             marc_gui_upper.add({type = "label", name = "marc_top1_spacer" , caption = "                                                      "})
         end
     
-        marc_gui_upper.add({type = "sprite-button", sprite = "sprite_marc_calculator", name = "marc_calculator_button" ,align = "right", style = "sprite_obj_marc_style"})
+        marc_gui_upper.add({type = "sprite-button", sprite = "sprite_marc_calculator", name = "marc_calculator_button" , style = "sprite_obj_marc_style"})
     
-        marc_gui_upper.add({type = "sprite-button", sprite = "sprite_marc_close", name = "marc_close_button" ,align = "right", style = "sprite_obj_marc_style"})
+        marc_gui_upper.add({type = "sprite-button", sprite = "sprite_marc_close", name = "marc_close_button" , style = "sprite_obj_marc_style"})
 
     -- main marc gui has two frames, one for inputs, one for outputs
     local marc_gui = marc_gui_top.add({type = "flow", name = "marc_gui", direction = "horizontal"})
