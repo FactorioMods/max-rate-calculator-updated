@@ -1,5 +1,0 @@
--- require("prototypes.entity.powered-floor")
--- require("prototypes.item.powered-floor")
--- require("prototypes.recipe.powered-floor")
--- require("prototypes.technology.powered-floor")
-require("powered-floor-prototypes")
