@@ -9,7 +9,7 @@ data:extend(
 	{
 		type = "custom-input",
 		name = "marcalc_toggle",
-		key_sequence = "CONTROL + ENTER",
+		key_sequence = "CONTROL + RETURN",
 		consuming = "none"
 	}
 }

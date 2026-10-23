@@ -1,7 +1,7 @@
 {
   "name": "max-rate-calculator-updated",
   "author": "Theanderblast (original); johnmart19 / FactorioMods (2.1 fork)",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "title": "Max Rate Calculator: Updated",
   "homepage": "https://github.com/FactorioMods/max-rate-calculator-updated",
   "description": "Factorio 2.1 update of Max Rate Calculator. Original author: Theanderblast. Calculates maximum consumption/prodution rates of assemblers, plants, etc.",
