@@ -1,7 +1,16 @@
 # Max Rate Calculator: Updated
 
-Factorio 2.1 update of Max Rate Calculator. Original author: Theanderblast. Calculates maximum consumption/prodution rates of assemblers, plants, etc.
+Select machines to calculate their maximum ingredient consumption and product output.
 
-Disable the original mod before enabling this fork. Entity, item, recipe and startup setting names are retained. Mod-private runtime state belongs to the old mod identity; per-player transient UI/distribution state is rebuilt.
+**Factorio 2.1 · Version 1.0.3**
 
-See [Factorio 2.1 changes and validation](FACTORIO-2.1.md) and [original credits and license](ATTRIBUTION.md).
+
+## Installation
+
+Disable MaxRateCalculator before enabling this fork.
+
+[Mod Portal](https://mods.factorio.com/mod/max-rate-calculator-updated) · [Downloads](https://github.com/FactorioMods/max-rate-calculator-updated/releases) · [Tests and 2.1 changes](FACTORIO-2.1.md)
+
+## Credits
+
+Original mod by Theanderblast. See [credits and license](ATTRIBUTION.md).
