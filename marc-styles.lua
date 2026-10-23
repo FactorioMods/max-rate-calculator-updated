@@ -10,7 +10,7 @@ default_gui.sprite_obj_marc_style =
 	left_padding = 0,
 	height = 32,
 	width = 32,
-	scalable = false
+
 }
 
 default_gui.marcalc_button_style = 
@@ -23,7 +23,7 @@ default_gui.marcalc_button_style =
 	left_padding = 0,
 	height = 40,
 	width = 40,
-	scalable = false
+
 }
 
 default_gui.table_marc_style =
@@ -31,8 +31,7 @@ default_gui.table_marc_style =
 	type = "table_style",
 	horizontal_spacing = 5,
 	vertical_spacing = 1,
-	resize_row_to_width = false,
-	resize_to_row_height = false,
+
 }
 
 default_gui.scroll_pane_marc_style =
@@ -44,11 +43,10 @@ default_gui.scroll_pane_marc_style =
 	-- 	type = "flow_style",
 	-- 	parent = "flow_style"
 	-- },
-	resize_row_to_width = true,
-	resize_to_row_height = false,
+
 	minimal_height=128,
 	maximal_height=400,
-	max_on_row = 1,
+
 }
 
 data:extend(

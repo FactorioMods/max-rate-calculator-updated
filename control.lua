@@ -11,7 +11,6 @@ show_energy = false
 
 g_marc_units = {}
 
-
 -- .16 values for belts m/d = 3/40, 3/80, 1/40
 
 g_marc_units[1] = {name="marc-gui-persec",          localized_name = {"marc-gui-persec"},           multiplier = 1, divisor = 1, infotype="time"}
@@ -37,7 +36,6 @@ local watt_format = "%16.1f"
 storage.marc_win_loc_x = 0
 storage.marc_win_loc_y = 176 -- puts us just below rocket stats
 -- ----------------------------------------------------------------
-
 
 function boolstr(bool)
     if bool
@@ -146,7 +144,6 @@ local function get_entity_recipe(entity)
     end
 end
 
-
 -- ----------------------------------------------------------------
 
 -- Return a flag indicating if name refers to an item (such as iron-plate) or a fluid
@@ -195,7 +192,6 @@ end
 local function add_value_to_marcalc_clickable_list(inout_data, label_name, count)
     inout_data.clickable_values[label_name] = count
 end
-
 
 -- ----------------------------------------------------------------
 
@@ -293,7 +289,6 @@ local function find_inserters()
     debug_log(__FUNC__(), "looking for inserters")
     g_inserters_added = false
 
-    
     for _, entity_proto in pairs(prototypes.get_entity_filtered(
         {
             {filter = "type", type = "inserter" }
@@ -312,11 +307,9 @@ local function find_inserters()
 --          debug_print (entity_proto.name .. " has speed " .. speed .. " denom is " .. denom .. " size " .. #g_marc_units)
             
             --table.insert(g_marc_units,{name=p.name,   localized_name = p.localised_name,      multiplier = 1, divisor =denom , infotype="transport"})
-            
 
         end
     end             
-        
 
 end
 -- ----------------------------------------------------------------
@@ -326,16 +319,13 @@ local function build_units_dropdown_list()
 
     local item_list = {}
 
-    
     local listix = 1
     for _, marc_unit in ipairs(g_marc_units)
     do
         item_list[listix] = g_marc_units[listix].localized_name
         listix = listix + 1
     end
-    
 
-    
     return item_list
 end
 
@@ -358,8 +348,6 @@ local function init_selected_units(player_index)
     end
 end
 
-
-
 -- ----------------------------------------------------------------
 
 -- scale the count based on the unit.
@@ -375,7 +363,6 @@ local function scale_rate(player, name, count)
     
     -- debug_print("scale_rate " .. name .. " mult " .. multiplier .. " div " .. divisor .. " count " .. count)
 
-
     local proto = get_proto(name)
     if proto == nil -- not sure what this is
     then
@@ -390,7 +377,6 @@ local function scale_rate(player, name, count)
         -- showing inserter/belt rate for a fluid makes no sense
         return -1
     end
-
 
     if unit_type == "inserter"
     then
@@ -484,8 +470,7 @@ local function write_marc_gui(player, inout_data)
         end
         return
     end
-    
-    
+
     root.add({type = "frame", name = "marc_gui_top", direction = "vertical", caption={"marc-gui-top-label"}})
     
     local marc_gui_top = root.marc_gui_top
@@ -500,15 +485,9 @@ local function write_marc_gui(player, inout_data)
     end
     root.marc_gui_top.location = { storage.marc_win_loc_x, storage.marc_win_loc_y }
 
-    
-    
     -- upper section has Rate <dropdown> <close button>
     local marc_gui_upper = marc_gui_top.add({type = "flow", name = "marc_gui_upper", direction = "horizontal"})
 
-    
-
-    
-    
     marc_gui_upper.add({type = "label", name="marc_upper_rate_label", caption={"marc-gui-rate-colon"}, tooltip={"marc-gui-tt-rate-select"}})
     
     debug_print("#g_marc_units " .. #g_marc_units)
@@ -530,8 +509,6 @@ local function write_marc_gui(player, inout_data)
     
         marc_gui_upper.add({type = "sprite-button", sprite = "sprite_marc_close", name = "marc_close_button" ,align = "right", style = "sprite_obj_marc_style"})
 
-    
-    
     -- main marc gui has two frames, one for inputs, one for outputs
     local marc_gui = marc_gui_top.add({type = "flow", name = "marc_gui", direction = "horizontal"})
     
@@ -553,7 +530,6 @@ local function write_marc_gui(player, inout_data)
     local multiplier = unit_entry.multiplier
     local unit_type = unit_entry.infotype
 
-    
     -- Input ingredients
     --
     if input_items > 0
@@ -569,7 +545,6 @@ local function write_marc_gui(player, inout_data)
         -- column headers
         gui_inrows.add({type = "label", name="marc_placeholder", caption="" })
         gui_inrows.add({type = "label", name = "marc_header_rate", caption = {"marc-gui-rate"}, tooltip={"marc-gui-tt-rate-input"} })
-        
 
         -- add a row for each input item, with sexy icon (sprite button), rate
         
@@ -717,13 +692,11 @@ local function effect_allowed_for_machine(effectname, machine_proto)
     end
 end
 
-
 -- ----------------------------------------------------------------
 
 -- calculate the speed and productivity effects of a single module
 local function calc_mod( modname, modeffects, modquant, effectivity, machine_proto )
 -- debug_print("calc_mod help " .. prototypes.item[modname])
-
 
     local dummy = 0
     protoeffects = prototypes.item[modname].module_effects
@@ -780,9 +753,6 @@ local function calc_mod( modname, modeffects, modquant, effectivity, machine_pro
             -- debug_log(__FUNC__(), "NEW WAY modeffects.quality now " .. modeffects.quality)
         end
 
-
-    
-    
 end
 
 -- ----------------------------------------------------------------
@@ -808,7 +778,6 @@ local function calc_mods(entity, modeffects, effectivity, machine_proto)
 
     return modeffects
 end
-
 
 -- ----------------------------------------------------------------
 
@@ -864,14 +833,10 @@ local function is_machine_in_range_of_beacon(entity, beacon)
     --print_bounding_box("             beacon_box ", beacon_box)
     -- debug_print(",,,,,,,,,,")
 
-
     local ans = do_boxes_intersect(beacon_box, machine_box)
-
-
 
     return ans
 end
-
 
 -- ----------------------------------------------------------------
 
@@ -1077,16 +1042,14 @@ local function calc_assembler(e, entity, inout_data, beacon_modeffects)
     --debug_log(__FUNC__()," esource.emissions_per_minute " .. esource.emissions_per_minute)
     
     -- ---------------- ENERGY AND POLLUTION! -------------------------
-    
-    
+
     -- issue reported for Pyanodon's alien life mod says some machines don't have consumption and pollution
     -- in allowed effects.  I'm not seeing this in the prototype, nor in run-time tests, the fawogae plantations
     -- do have consumption included in allowed_effects, and the plantation's water consumption is affected by
     -- speed modules in beacons or in the plantation itself
     --
     -- consumption applies to energy?  Pyanodon seems to treat it as item inputs
- 
-    
+
     debug_log(__FUNC__(), "cspeed " .. crafting_speed .. " modspeed " .. modeffects.speed .. " beacon_modeffects.speed " .. beacon_modeffects.speed .. " total_speed_effect " .. total_speed_effect)
 
     -- crafting_speed = crafting_speed * ( 1 + total_speed_effect)
@@ -1167,39 +1130,14 @@ local function calc_assembler(e, entity, inout_data, beacon_modeffects)
             local chance
             local amount
 
-            -- sometime in 0.17 factorio changed uranium recipe to use a probability value  * amount
-            -- rather than probability with a range of amount_min and amount_max
-            -- but some mods like Bob's Greenhouse still was using a range
-            if prod.probability ~= nil
-            then 
-                debug_log(__FUNC__(),"probability is " .. prod.probability .. ", prod.amount_min="..(prod.amount_min or "nil") ..", prod.amount_max="..(prod.amount_max or "nil")..", prod.amount="..(prod.amount or "nil"))
-                debug_log(__FUNC__(),"product.ignored_by_productivity="..strg(prod.ignored_by_productivity))
-                debug_log(__FUNC__(),"product.ignored_by_productivity="..strg(prod.ignored_by_productivity))
-                debug_log(__FUNC__(),"amount now ")
-                chance = prod.probability
-                if prod.amount_min ~= nil
-                then
-                    amount = chance * (prod.amount_min + prod.amount_max) / 2
-                else
-                   amount = prod.amount * chance
-                end
-            else
-                -- debug_log(__FUNC__(),"probability is nil")
-                chance = 1
+            local base_amount = prod.amount or ((prod.amount_min + prod.amount_max) / 2)
+            local shared = prod.shared_probability
+            chance = prod.independent_probability * (shared.max - shared.min)
+            base_amount = base_amount + (prod.extra_count_fraction or 0)
+            amount = base_amount * chance
 
-                if prod.amount ~= nil
-                then
-                    -- debug_log(__FUNC__(),"prod amount, modeffects.prod " .. prod.name .. " " .. prod.amount .. "," .. modeffects.prod )
-                    amount = prod.amount 
-                else
-                    amount =  (prod.amount_min + prod.amount_max) / 2
-                end
-            end    
-
-             local catalyst_amount = math.min(prod.ignored_by_productivity or 0, amount)
+             local catalyst_amount = math.min(prod.ignored_by_productivity or 0, base_amount) * chance
             -- Catalysts are not affected by productivity
-
-
 
             -- -- gotta handle super beacons - they can affect prod too
             -- -- debug_log(__FUNC__(), prod.name .. " amount " .. amount .. " modeffects " .. ( 1 + modeffects.prod) .. " cspeed " .. crafting_speed .. " crafting_time" .. crafting_time)
@@ -1269,9 +1207,7 @@ local function calc_mining(inout_data, surface, player, entity)
     local mining_power = 1 -- entity.prototype.mining_power
     
     local mining_time = prodproto.mineable_properties.mining_time
-    
 
-    
      debug_log(__FUNC__(),prodproto.name ..  " number of mineable products " .. #prodproto.mineable_properties.products)
     
     modeffects = init_modeffects()
@@ -1443,7 +1379,6 @@ local function getFluidProduction(proto)
     -- energy_consumption must be wrong for Kras
 end
 
-
 local function calc_boiler(inout_data, surface, entity)
     
     debug_log(__FUNC__(), "boiler is " .. entity.name)
@@ -1454,7 +1389,7 @@ local function calc_boiler(inout_data, surface, entity)
     local prodproto = prototypes.entity[entity.name]   
     -- debug_log(__FUNC__(), "type is " .. prodproto.type)
     -- debug_log(__FUNC__(), "max is " .. prodproto.get_max_energy_usage())
-    -- -- debug_log(__FUNC__(), "fluid_usage_per_tick is " .. prodproto.fluid_usage_per_tick)
+    -- -- debug_log(__FUNC__(), "fluid_usage_per_tick is " .. prodproto.get_fluid_usage_per_tick(entity.quality))
     -- 
     -- local energySource = prodproto.heat_energy_source_prototype
     -- if energySource == nil
@@ -1489,8 +1424,7 @@ local function calc_boiler(inout_data, surface, entity)
     --debug_log(__FUNC__(), "prodproto.energy_consumption " .. (prodproto.energy_consumption or -99))
     local helsanswer = getFluidProduction(prodproto)    
     debug_log(__FUNC__(), "helsanswer is " .. helsanswer)
-    
-        
+
  -- local consumptionRate
 local productionRate
 -- if entity.name == "boiler"
@@ -1516,14 +1450,11 @@ end
 
 local function calc_generator(inout_data, surface, entity)
 
-
     debug_log(__FUNC__(), "generator is " .. entity.name)
-    
-    
-    
+
     local genProto = prototypes.entity[entity.name]
-    debug_log(__FUNC__(), "generator fluid usage is " .. genProto.fluid_usage_per_tick)
-    local consumptionRate = genProto.fluid_usage_per_tick * 60
+    debug_log(__FUNC__(), "generator fluid usage is " .. genProto.get_fluid_usage_per_tick(entity.quality))
+    local consumptionRate = genProto.get_fluid_usage_per_tick(entity.quality) * 60
     local fluid_name = "some fluid"
     
     if #genProto.fluidbox_prototypes == 1
@@ -1541,7 +1472,6 @@ local function calc_generator(inout_data, surface, entity)
     end
 end 
 
-
 -- ----------------------------------------------------------------
 
 -- player has selected some machines with our tool
@@ -1557,8 +1487,7 @@ script.on_event(defines.events.on_player_selected_area,
         
         find_belts()
         find_inserters()
-        
-        
+
         storage.marc_selected_unit_index = storage.marc_selected_unit_index or {}
         local player = game.players[event.player_index]
         local surface = player.surface
@@ -1612,12 +1541,12 @@ script.on_event(defines.events.on_player_selected_area,
                 debug_log(function_name,"TODO maybe: " .. entity.type)
                 if prodproto.fixed_recipe ~= nil
                 then
-                    debug_log(function_name,"TODO fixed recipe " .. prodproto.fixed_recipe)
+                    debug_log(function_name,"TODO fixed recipe " .. prodproto.fixed_recipe.name)
                 end
                 
-                if prodproto.fluid_usage_per_tick ~= nil
+                if prodproto.get_fluid_usage_per_tick(entity.quality) ~= nil
                 then
-                    debug_log(function_name,"TODO fupt " .. prodproto.fluid_usage_per_tick)
+                    debug_log(function_name,"TODO fupt " .. prodproto.get_fluid_usage_per_tick(entity.quality))
                 end
             end
         end
@@ -1694,7 +1623,6 @@ local function on_hotkey_main(event)
         end
     end
 
-
 end
 
 -- ----------------------------------------------------------------
@@ -1710,7 +1638,6 @@ local function max_rate_shortcut(event)
         toggle_calculator(player)
     end
 end
-
 
 -- ----------------------------------------------------------------
 
@@ -1747,8 +1674,7 @@ local function on_gui_click(event)
             end
         end
     end
-    
-    
+
     if possible_marc_prefix == marc_prefix
     then
         if event_name == "marc_calculator_button"
@@ -1782,10 +1708,7 @@ local function on_gui_selection(event)
     local event_name = event.element.name
     local player = game.players[event.player_index]
     local root = get_gui_root(player)
-    
 
-
-        
     if event_name == "maxrate_units"
     then
         local selected = root.marc_gui_top.marc_gui_upper.maxrate_units.selected_index
@@ -1810,7 +1733,6 @@ local function on_gui_selection(event)
         end
     end
 end
-
 
 -- ----------------------------------------------------------------
 

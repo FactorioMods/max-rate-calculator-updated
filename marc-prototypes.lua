@@ -16,7 +16,7 @@ data:extend(
     type = "selection-tool",
     name = "max-rate-calculator",
     icons = {
-      { icon = "__max-rate-calculator-updated__/graphics/max-rate-calculator32.png", icon_size = 32, mipmap_count = 2 },
+      { icon = "__max-rate-calculator-updated__/graphics/max-rate-calculator32.png", icon_size = 32 },
     },
     select = {
           border_color = { r = 1, g = 1 },
