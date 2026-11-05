@@ -1076,9 +1076,7 @@ local function calc_mining(inout_data, surface, player, entity)
     local mining_power = 1 -- entity.prototype.mining_power
     
     local mining_time = prodproto.mineable_properties.mining_time
-    
 
-    
      debug_log(__FUNC__(),prodproto.name ..  " number of mineable products " .. #prodproto.mineable_properties.products)
     
     modeffects = init_modeffects()
@@ -1109,20 +1107,19 @@ local function calc_mining(inout_data, surface, player, entity)
     debug_log(__FUNC__(),"amount = amount* ( 1 +  drilling_bonus _modeffects.prod + beacon_modeffects.prod)")
     debug_log(__FUNC__(),amount.." = " ..  oldamount .. " * ( 1 +" ..drilling_bonus.. "+" ..  modeffects.prod.. " +" ..  beacon_modeffects.prod..")")
     
+    local required_fluid = prodproto.mineable_properties.required_fluid
+    if required_fluid ~= nil then
+        local fluid_amount = prodproto.mineable_properties.fluid_amount * mining_speed / mining_time
+        record_input(inout_data, required_fluid, fluid_amount / 10)
+    end
+
     for _,mineable_product in pairs(prodproto.mineable_properties.products)
     do
         local product_name = mineable_product.name
         local result_type = get_item_or_fluid(product_name)
         -- debug_log(__FUNC__(),"mineable_product.name" .. mineable_product.name)
         
-        local required_fluid = prodproto.mineable_properties.required_fluid
-        if required_fluid ~= nil
-        then
-            local fluid_amount = prodproto.mineable_properties.fluid_amount * mining_speed / mining_time
-            fluid_amount = fluid_amount / 10 -- prodproto.mineable_properties.fluid_amount is 10x too high
-            record_input(inout_data, required_fluid, fluid_amount)
-        end
-
+        local product_amount = amount
         if result_type == "fluid"
         then
             -- debug_log(__FUNC__(), "prod.amount is " .. prod.amount)
@@ -1140,15 +1137,24 @@ local function calc_mining(inout_data, surface, player, entity)
 
             local mining_yield = (prod.amount / prodproto.normal_resource_amount ) * mineable_amt
             debug_log(__FUNC__(),"yield is " .. math.floor(mining_yield))
-            mining_yield = math.min(mining_yield, 100)
-
-            amount = amount *  mining_yield   
+            product_amount = amount * mining_yield
             debug_log(__FUNC__(),amount .." = amount*  "..mining_yield .. " for " .. product_name)
 
         end
         
         debug_log(__FUNC__(), "product_name is now " .. product_name .. " amount " .. amount)
-        record_output(inout_data, product_name, amount)
+        if result_type == "item" then
+            -- Runtime products expose separate independent/shared probabilities.
+            local base_amount = mineable_product.amount or
+                ((mineable_product.amount_min + mineable_product.amount_max) / 2)
+            base_amount = base_amount + (mineable_product.extra_count_fraction or 0)
+            local shared = mineable_product.shared_probability
+            local chance = mineable_product.independent_probability * (shared.max - shared.min)
+            local catalyst_amount = math.min(mineable_product.ignored_by_productivity or 0, base_amount)
+            product_amount = oldamount * chance * (catalyst_amount +
+                (base_amount - catalyst_amount) * (1 + drilling_bonus + modeffects.prod + beacon_modeffects.prod))
+        end
+        record_output(inout_data, product_name, product_amount)
     end
 
 end
