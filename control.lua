@@ -1001,36 +1001,13 @@ local function calc_assembler(e, entity, inout_data, beacon_modeffects)
             local chance
             local amount
 
-            -- sometime in 0.17 factorio changed uranium recipe to use a probability value  * amount
-            -- rather than probability with a range of amount_min and amount_max
-            -- but some mods like Bob's Greenhouse still was using a range
-            if prod.probability ~= nil
-            then 
-                debug_log(__FUNC__(),"probability is " .. prod.probability .. ", prod.amount_min="..(prod.amount_min or "nil") ..", prod.amount_max="..(prod.amount_max or "nil")..", prod.amount="..(prod.amount or "nil"))
-                debug_log(__FUNC__(),"product.ignored_by_productivity="..strg(prod.ignored_by_productivity))
-                debug_log(__FUNC__(),"product.ignored_by_productivity="..strg(prod.ignored_by_productivity))
-                debug_log(__FUNC__(),"amount now ")
-                chance = prod.probability
-                if prod.amount_min ~= nil
-                then
-                    amount = chance * (prod.amount_min + prod.amount_max) / 2
-                else
-                   amount = prod.amount * chance
-                end
-            else
-                -- debug_log(__FUNC__(),"probability is nil")
-                chance = 1
+            local base_amount = prod.amount or ((prod.amount_min + prod.amount_max) / 2)
+            local shared = prod.shared_probability
+            chance = prod.independent_probability * (shared.max - shared.min)
+            base_amount = base_amount + (prod.extra_count_fraction or 0)
+            amount = base_amount * chance
 
-                if prod.amount ~= nil
-                then
-                    -- debug_log(__FUNC__(),"prod amount, modeffects.prod " .. prod.name .. " " .. prod.amount .. "," .. modeffects.prod )
-                    amount = prod.amount 
-                else
-                    amount =  (prod.amount_min + prod.amount_max) / 2
-                end
-            end    
-
-             local catalyst_amount = math.min(prod.ignored_by_productivity or 0, amount)
+             local catalyst_amount = math.min(prod.ignored_by_productivity or 0, base_amount) * chance
             -- Catalysts are not affected by productivity
 
             -- -- gotta handle super beacons - they can affect prod too
@@ -1049,9 +1026,8 @@ local function calc_assembler(e, entity, inout_data, beacon_modeffects)
             -- speed bonus applies fully to productivity bonus, but is limited to no more that 60 for non-prod boosted output
             debug_log(__FUNC__(),"amount now="..amount..", game_limited_rate="..game_limited_rate)
 
-            amount =  amount *  game_limited_rate 
              debug_log(__FUNC__(),"amount now "..amount..", catalyst_amount="..catalyst_amount..", productivity="..productivity);
-            amount = (catalyst_amount + ((amount - catalyst_amount) * productivity)) 
+            amount = game_limited_rate * (catalyst_amount + ((amount - catalyst_amount) * productivity))
             debug_log(__FUNC__(),"amount finally="..amount)
             record_output(inout_data, prod.name, amount)
 
