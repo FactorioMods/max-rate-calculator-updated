@@ -695,12 +695,11 @@ end
 -- ----------------------------------------------------------------
 
 -- calculate the speed and productivity effects of a single module
-local function calc_mod( modname, modeffects, modquant, effectivity, machine_proto )
+local function calc_mod( modname, modeffects, modquant, effectivity, machine_proto, quality )
 -- debug_print("calc_mod help " .. prototypes.item[modname])
 
-
     local dummy = 0
-    protoeffects = prototypes.item[modname].module_effects
+    protoeffects = prototypes.item[modname].get_module_effects(quality)
     debug_log(__FUNC__(),"calc_mod mod name=" .. modname .. ", quantity=" .. modquant .. ",  machine_proto=" .. machine_proto.name)
     local old_way = false
     local new_way = true
@@ -754,9 +753,6 @@ local function calc_mod( modname, modeffects, modquant, effectivity, machine_pro
             -- debug_log(__FUNC__(), "NEW WAY modeffects.quality now " .. modeffects.quality)
         end
 
-
-    
-    
 end
 
 -- ----------------------------------------------------------------
@@ -776,149 +772,11 @@ local function calc_mods(entity, modeffects, effectivity, machine_proto)
         debug_print("calc_mods proto=" .. prototypes.item[modname].name)
         debug_print("calc_mods modname=" .. modname .. ", modquant=" .. modquant)
         
-        calc_mod(modname, modeffects, modquant, effectivity, machine_proto)
+        calc_mod(modname, modeffects, modquant, effectivity, machine_proto, modqual)
         ix = ix + 1
     end 
 
     return modeffects
-end
-
-
--- ----------------------------------------------------------------
-
-local function print_bounding_box(name, b)
-    debug_print(name .. " " .. b.left_top.x .. "," .. b.left_top.y .. " " .. b.right_bottom.x .. "," .. b.right_bottom.y)
-end
-
--- ----------------------------------------------------------------
--- thanks to Psihuis for this one:
-
-local function do_boxes_intersect(a, b)
-    local a_left = a.left_top.x
-    local a_right = a.right_bottom.x
-    local a_top = a.left_top.y
-    local a_bottom = a.right_bottom.y
-    local b_left = b.left_top.x
-    local b_right = b.right_bottom.x
-    local b_top = b.left_top.y
-    local b_bottom = b.right_bottom.y
-    return (a_left < b_right and a_right > b_left) and (a_top < b_bottom and a_bottom > b_top)
-end
--- ----------------------------------------------------------------
-
-local function is_machine_in_range_of_beacon(entity, beacon)
-    debug_print("is machine in range")
-    local machine_selection_box = entity.prototype.selection_box
-    local beac_dist = prototypes.entity[beacon.name].get_supply_area_distance()
-    
-    -- debug_print("beac prot selbox" .. beacon.prototype.selection_box.left_top.x .. " - " .. beacon.prototype.selection_box.right_bottom.y )
-    local beacsel_left = beacon.prototype.selection_box.left_top.x
-    local beacsel_top = beacon.prototype.selection_box.left_top.y
-    local beacsel_right = beacon.prototype.selection_box.right_bottom.x
-    local beacsel_bottom = beacon.prototype.selection_box.right_bottom.y
-    debug_print(beacsel_left .. " " .. beacsel_top .. " X " .. beacsel_right .. " " .. beacsel_bottom)
-
-    debug_print(beacsel_left .. " " .. beacsel_top .. " X " .. beacsel_right .. " " .. beacsel_bottom)
-    
-    local beacon_left_top = {x = beacsel_left + beacon.position.x - beac_dist,
-                            y = beacsel_top + beacon.position.y - beac_dist}
-                            
-    local beacon_right_bottom = {x = beacsel_right + beacon.position.x + beac_dist,
-                            y = beacsel_bottom + beacon.position.y + beac_dist}
-    local beacon_box = { left_top = beacon_left_top, right_bottom = beacon_right_bottom }
-    
-    local machine_left_top = { x = entity.position.x + machine_selection_box.left_top.x,
-                                y = entity.position.y + machine_selection_box.left_top.y }
-    local machine_right_bottom = { x = entity.position.x + machine_selection_box.right_bottom.x,
-                                y = entity.position.y + machine_selection_box.right_bottom.y }
-
-    local machine_box = { left_top = machine_left_top, right_bottom = machine_right_bottom }
-    -- print_bounding_box("             machine_box", machine_box)
-    -- debug_print("..........")
-    --print_bounding_box("             beacon_box ", beacon_box)
-    -- debug_print(",,,,,,,,,,")
-
-
-    local ans = do_boxes_intersect(beacon_box, machine_box)
-
-
-
-    return ans
-end
-
-
--- ----------------------------------------------------------------
-
-max_beacon_dist = -1
-
--- calculate effects of beacons.  For our purposes, only speed effects count
-local function check_beacons(surface, entity)
-    
-    local x = entity.position.x
-    local y = entity.position.y
-    local machine_proto = prototypes.entity[entity.name]
-    
-    modeffects = init_modeffects()
-    if true
-    then
-    
-    if max_beacon_dist == -1
-    then
-         debug_log(__FUNC__(),"beacon distance was -1 so look")
-        
-    for _, entity_proto in pairs(prototypes.get_entity_filtered(
-        {
-            {filter = "type", type = "beacon" }
-        }
-        ))
-        do            
-            if entity_proto.type == "beacon"
-            then
-                 debug_log(__FUNC__(),"found a beacon " .. entity_proto.name)
-                -- local thingy = entity.get_beacon_effect_receivers()
-                local distance = entity_proto.get_supply_area_distance()
-                
-                --local distance = prototypes.item[entity_proto.name].get_supply_area_distance()
-                if distance > max_beacon_dist
-                then
-                    max_beacon_dist = distance
-                end
-            end
-        end
-        -- max_beacon_dist = prototypes.entity["beacon"].get_supply_area_distance()
-         debug_log(__FUNC__(),"beacon distance is " .. max_beacon_dist)
-    end
-    
-     debug_log(__FUNC__(),"check_beacons searching around " .. x .. "," .. y .. " beacon dist is " .. max_beacon_dist)
-    machine_box = entity.prototype.selection_box
-     debug_log(__FUNC__(),"check_beacons box is " .. machine_box.left_top.x .. "," .. machine_box.left_top.y .. " thru " .. machine_box.right_bottom.x .. "," .. machine_box.right_bottom.y)
-    modeffects = init_modeffects()
-
-    local beacons = 0
-    local mods = 0
-
-    -- assumes all beacons have same effect radius
-    search_area = { { x + machine_box.left_top.x - max_beacon_dist,     y + machine_box.left_top.y - max_beacon_dist }, 
-                    { max_beacon_dist + x + machine_box.right_bottom.x, max_beacon_dist + y + machine_box.right_bottom.y }}
-     debug_log(__FUNC__()," upper left " ..   x + machine_box.left_top.x - max_beacon_dist .. "," .. y + machine_box.left_top.y - max_beacon_dist)                
-
-    for _,beacon in pairs(surface.find_entities_filtered{ area=search_area, type="beacon"})
-    do  
-        debug_log(__FUNC__(),"test a beacon")
-        if is_machine_in_range_of_beacon(entity, beacon)
-        then
-            debug_log(__FUNC__()," beacon area is " .. beacon.prototype.get_supply_area_distance() .. " at " .. beacon.position.x .. "," .. beacon.position.y)
-            beacons = beacons + 1   
-            local effectivity = beacon.prototype.distribution_effectivity
-            debug_log(__FUNC__(),"effectivity is " .. effectivity)
-            calc_mods( beacon, modeffects, effectivity, machine_proto)
-        end
-    end
-    
-     debug_log(__FUNC__(),"check_beacons - Saw " .. beacons)
-    end
-    return modeffects
-
 end
 
 -- ----------------------------------------------------------------
@@ -1029,7 +887,11 @@ local function calc_assembler(e, entity, inout_data, beacon_modeffects)
         
     -- get the machines base crafting speed, in cycles per second
     -- local crafting_speed = entity.prototype.get_crafting_speed()
-    local crafting_speed = entity.crafting_speed
+    -- Potential receiver effects retain installed beacon bonuses without power.
+    local powered_effects = entity.potential_effects or entity.effects or {}
+    local active_effects = entity.effects or {}
+    local crafting_speed = prodproto.get_crafting_speed(entity.quality) *
+        math.max(0.2, 1 + (powered_effects.speed or 0))
     debug_log(__FUNC__(),"entity.name " .. entity.name .. " crafting_speed " .. crafting_speed)
     modeffects = init_modeffects()
     local effectivity = 1
@@ -1044,7 +906,7 @@ local function calc_assembler(e, entity, inout_data, beacon_modeffects)
     
     -- ---------------- ENERGY -------------------------
 
-    energy_usage(inout_data, prodproto, beacon_modeffects, mod_effects)
+    energy_usage(inout_data, prodproto, powered_effects, nil)
     -- emissions values are always zero in the entity prototype, so we're not calculating pollution now
     -- local pollution = esource.emissions -- * esource.emissions * 60
     -- debug_log(__FUNC__()," esource.emissions " .. pollution)
@@ -1208,10 +1070,6 @@ end
 local function calc_mining(inout_data, surface, player, entity)
 
     local beacon_modeffects = { speed = 0, prod = 0, quality = 0 }
-    if entity.prototype.module_inventory_size > 0                   
-    then
-        beacon_modeffects = check_beacons(surface, entity)
-    end
     local drilling_bonus = player.force.mining_drill_productivity_bonus
 
     local x = entity.position.x
@@ -1246,8 +1104,13 @@ local function calc_mining(inout_data, surface, player, entity)
     
     modeffects = init_modeffects()
     local effectivity = 1
-    modeffects = calc_mods(entity, modeffects, effectivity, entity.prototype)
-    energy_usage(inout_data, drillproto, beacon_modeffects, nil)
+    -- Native receiver values include module/beacon quality and beacon profiles.
+    local native_effects = entity.potential_effects or entity.effects or {}
+    local active_effects = entity.effects or {}
+    modeffects.speed = native_effects.speed or 0
+    modeffects.prod = entity.productivity_bonus - drilling_bonus +
+        (native_effects.productivity or 0) - (active_effects.productivity or 0)
+    energy_usage(inout_data, drillproto, native_effects, nil)
     
     -- adjust crafting speed based on modules and beacons
     local total_speed_effect = modeffects.speed + beacon_modeffects.speed
@@ -1317,7 +1180,7 @@ local function calc_production(e, inout_data, surface, entity)
     local machines_with_no_recipe = 0
     local beacon_modeffects = init_modeffects()
     
-    beacon_modeffects = check_beacons(surface, entity)
+    -- Crafting speed/productivity and energy use native receiver effects.
     if get_entity_recipe(entity)  == nil
     then
         machines_with_no_recipe = machines_with_no_recipe + 1
