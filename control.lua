@@ -995,7 +995,10 @@ local function calc_assembler(e, entity, inout_data, beacon_modeffects)
         -- table
         debug_log(__FUNC__(),"recipe.name="..recipe.name);
         debug_log(__FUNC__(),"prod bonus="..recipe.productivity_bonus);
-        local productivity = (entity.productivity_bonus + recipe.productivity_bonus + 1)
+        local productivity_bonus = entity.productivity_bonus + recipe.productivity_bonus +
+            (powered_effects.productivity or 0) - (active_effects.productivity or 0)
+        local productivity = 1 + math.min(recipe.prototype.maximum_productivity,
+            math.max(0, productivity_bonus))
         for _, prod in ipairs(recipe.products)
         do
             local chance
